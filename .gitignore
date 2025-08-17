@@ -1,3 +1,5 @@
 *~
 build/*
 *swp
+cue_parser.[ch]
+cue_scanner.c

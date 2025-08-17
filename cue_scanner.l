@@ -135,7 +135,11 @@ REM		{ BEGIN(REM); /* exclusive rules for special exceptions */ }
 
 ^{ws}*\n	{ yylineno++; /* blank line */ }
 \n		{ yylineno++; return '\n'; }
-.		{ fprintf(stderr, "bad character '%c'\n", yytext[0]); }
+.	{
+		#ifndef LIBCUE_QUIET_MODE
+		fprintf(stderr, "bad character '%c'\n", yytext[0]);
+		#endif
+	}
 
 <<EOF>> { static int once = 0; return (once = !once) ? '\n' : 0; }
 

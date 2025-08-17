@@ -322,7 +322,9 @@ rem_item
 
 void yyerror (const char *s)
 {
+	#ifndef LIBCUE_QUIET_MODE
 	fprintf(stderr, "%d: %s\n", yylineno, s);
+	#endif
 }
 
 static void reset_static_vars()
