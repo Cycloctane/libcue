@@ -351,6 +351,7 @@ Cd *cue_parse_file(FILE *fp)
 
 	Cd *ret_cd = NULL;
 
+	yylineno = 1;
 	if (0 == yyparse()) ret_cd = cd;
 	else
 	{
@@ -372,6 +373,7 @@ Cd *cue_parse_string(const char* string)
 
 	Cd *ret_cd = NULL;
 
+	yylineno = 1;
 	if (0 == yyparse()) ret_cd = cd;
 	else
 	{
