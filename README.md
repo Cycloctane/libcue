@@ -11,3 +11,8 @@ Applied changes:
 - Fix compatibility issue of `CUE_EXPORT` when using msvc compiler.
 - Add `never-interactive` option in flex.
 - Add a macro to disable syntax warning output in stderr. (cc -DLIBCUE_QUIET_MODE)
+
+`v2.3.0.dev2`:
+- Fix yylineno int overflow (Merge https://github.com/lipnitsk/libcue/pull/49)
+- Add missing `cd_get_catalog` API (Merge https://github.com/lipnitsk/libcue/pull/56)
+- Fix NULL pointer check in `cd_get_track` (Merge https://github.com/lipnitsk/libcue/pull/60)
