@@ -124,6 +124,8 @@ Cd *cue_parse_string(const char*);
 %token <ival> DATE
 %token <ival> COMMENT
 %token <ival> XXX_GENRE /* parsed in REM but stored in CD-TEXT */
+%token <ival> XXX_DISCID
+%token <ival> XXX_COMPOSER
 %token <ival> REPLAYGAIN_ALBUM_GAIN
 %token <ival> REPLAYGAIN_ALBUM_PEAK
 %token <ival> REPLAYGAIN_TRACK_GAIN
@@ -308,6 +310,8 @@ time
 rem
 	: rem_item STRING '\n' { rem_set($1, $2, rem); }
 	| XXX_GENRE STRING '\n' { cdtext_set($1, $2, cdtext); }
+	| XXX_DISCID STRING '\n' { cdtext_set($1, $2, cdtext); }
+	| XXX_COMPOSER STRING '\n' { cdtext_set($1, $2, cdtext); }
 	;
 
 rem_item
