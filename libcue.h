@@ -98,6 +98,7 @@ enum Pti {
 
 enum RemType {
 	REM_DATE,	/* date of cd/track */
+	REM_COMMENT,
 	REM_REPLAYGAIN_ALBUM_GAIN,
 	REM_REPLAYGAIN_ALBUM_PEAK,
 	REM_REPLAYGAIN_TRACK_GAIN,
@@ -138,7 +139,7 @@ CUE_EXPORT Rem* track_get_rem(const Track* track);
  * return pointer to value for rem comment
  * @param unsigned int: enum of rem comment
  */
-CUE_EXPORT const char* rem_get(unsigned int, Rem*);
+CUE_EXPORT const char *rem_get(enum RemType, Rem*);
 
 /* Track functions */
 CUE_EXPORT Track *cd_get_track(const Cd *cd, int i);
