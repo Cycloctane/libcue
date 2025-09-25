@@ -16,3 +16,8 @@ Applied changes:
 - Fix yylineno int overflow (Merge https://github.com/lipnitsk/libcue/pull/49)
 - Add missing `cd_get_catalog` API (Merge https://github.com/lipnitsk/libcue/pull/56)
 - Fix NULL pointer check in `cd_get_track` (Merge https://github.com/lipnitsk/libcue/pull/60)
+
+`v2.3.0.dev3`:
+
+- Parse `REM COMMENT` lines.
+- Parse `REM DISCID` and `REM COMPOSER` lines (stored in cdtext as "DISC_ID" and "COMPOSER").
