@@ -28,7 +28,6 @@ void cd_dump(Cd *cd);
  * Cd functions
  */
 
-void cd_set_mode(Cd *cd, int mode);
 void cd_set_catalog(Cd *cd, char *catalog);
 void cd_set_cdtextfile(Cd *cd, char *cdtextfile);
 
@@ -50,8 +49,6 @@ void track_set_start(Track *track, long start);
 void track_set_length(Track *track, long length);
 /* see enum TrackMode */
 void track_set_mode(Track *track, int mode);
-/* see enum TrackSubMode */
-void track_set_sub_mode(Track *track, int sub_mode);
 /* see enum TrackFlag */
 void track_set_flag(Track *track, int flag);
 void track_clear_flag(Track *track, int flag);

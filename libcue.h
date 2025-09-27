@@ -19,16 +19,6 @@ extern "C" {
 #endif
 
 /*
- * disc modes
- * DATA FORM OF MAIN DATA (5.29.2.8)
- */
-enum DiscMode {
-	MODE_CD_DA,		/* CD-DA */
-	MODE_CD_ROM,		/* CD-ROM mode 1 */
-	MODE_CD_ROM_XA		/* CD-ROM XA and CD-I */
-};
-
-/*
  * track modes
  * 5.29.2.8 DATA FORM OF MAIN DATA
  * Table 350 - Data Block Type Codes
@@ -42,16 +32,6 @@ enum TrackMode {
 	MODE_MODE2_FORM2,	/* 2324 byte block length */
 	MODE_MODE2_FORM_MIX,	/* 2332 byte block length */
 	MODE_MODE2_RAW		/* 2352 byte block length */
-};
-
-/*
- * sub-channel mode
- * 5.29.2.13 Data Form of Sub-channel
- * NOTE: not sure if this applies to cue files
- */
-enum TrackSubMode {
-	SUB_MODE_RW,		/* RAW Data */
-	SUB_MODE_RW_RAW		/* PACK DATA (written R-W */
 };
 
 /*
@@ -122,7 +102,6 @@ CUE_EXPORT Cd* cue_parse_string(const char*);
 CUE_EXPORT void cd_delete(Cd* cd);
 
 /* CD functions */
-CUE_EXPORT enum DiscMode cd_get_mode(const Cd *cd);
 CUE_EXPORT const char *cd_get_catalog(const Cd *cd);
 CUE_EXPORT const char *cd_get_cdtextfile(const Cd *cd);
 /*
@@ -149,7 +128,6 @@ CUE_EXPORT const char *track_get_filename(const Track *track);
 CUE_EXPORT long track_get_start(const Track *track);
 CUE_EXPORT long track_get_length(const Track *track);
 CUE_EXPORT enum TrackMode track_get_mode(const Track *track);
-CUE_EXPORT enum TrackSubMode track_get_sub_mode(const Track *track);
 CUE_EXPORT int track_is_set_flag(const Track *track, enum TrackFlag flag);
 CUE_EXPORT long track_get_zero_pre(const Track *track);
 CUE_EXPORT long track_get_zero_post(const Track *track);

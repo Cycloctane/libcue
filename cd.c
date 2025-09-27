@@ -22,7 +22,6 @@ struct Track {
 	Data file;			/* track data file */
 	Data zero_post;			/* post-gap generated with zero data */
 	int mode;			/* track mode */
-	int sub_mode;			/* sub-channel mode */
 	int flags;			/* flags */
 	char *isrc;			/* IRSC Code (5.22.4) 12 bytes */
 	Cdtext *cdtext;			/* CD-TEXT */
@@ -32,7 +31,6 @@ struct Track {
 };
 
 struct Cd {
-	int mode;			/* disc mode */
 	char *catalog;			/* Media Catalog Number (5.22.3) */
 	char *cdtextfile;		/* Filename of CDText File */
 	Cdtext *cdtext;			/* CD-TEXT */
@@ -49,7 +47,6 @@ Cd *cd_init(void)
 	if(NULL == cd) {
 		fprintf(stderr, "unable to create cd\n");
 	} else {
-		cd->mode = MODE_CD_DA;
 		cd->catalog = NULL;
 		cd->cdtextfile = NULL;
 		cd->cdtext = cdtext_init();
@@ -125,7 +122,6 @@ Track *track_init(void)
 		track->zero_post.length = -1;
 
 		track->mode = MODE_AUDIO;
-		track->sub_mode = SUB_MODE_RW;
 		track->flags = FLAG_NONE;
 		track->isrc = NULL;
 		track->cdtext = cdtext_init();
@@ -142,16 +138,6 @@ Track *track_init(void)
 /*
  * cd structure functions
  */
-void cd_set_mode(Cd *cd, int mode)
-{
-	cd->mode = mode;
-}
-
-enum DiscMode cd_get_mode(const Cd *cd)
-{
-	return cd->mode;
-}
-
 void cd_set_catalog(Cd *cd, char *catalog)
 {
 	if (cd->catalog)
@@ -270,16 +256,6 @@ enum TrackMode track_get_mode(const Track *track)
 	return track->mode;
 }
 
-void track_set_sub_mode(Track *track, int sub_mode)
-{
-	track->sub_mode = sub_mode;
-}
-
-enum TrackSubMode track_get_sub_mode(const Track *track)
-{
-	return track->sub_mode;
-}
-
 void track_set_flag(Track *track, int flag)
 {
 	track->flags |= flag;
@@ -375,7 +351,6 @@ static void cd_track_dump(Track *track)
 	printf("length: %ld\n", track->file.length);
 	printf("zero_post: %ld\n", track->zero_post.length);
 	printf("mode: %d\n", track->mode);
-	printf("sub_mode: %d\n", track->sub_mode);
 	printf("flags: 0x%x\n", track->flags);
 	printf("isrc: %s\n", track->isrc);
 
@@ -400,7 +375,6 @@ void cd_dump(Cd *cd)
 	int i;
 
 	printf("Disc Info\n");
-	printf("mode: %d\n", cd->mode);
 	printf("catalog: %s\n", cd->catalog);
 	printf("cdtextfile: %s\n", cd->cdtextfile);
 	if (NULL != cd->cdtext) {
