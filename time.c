@@ -29,11 +29,11 @@ void time_frame_to_msf(long frame, int *m, int *s, int *f)
 /* print frame in mm:ss:ff format */
 char *time_frame_to_mmssff(long f)
 {
-	static char msf[9];
+	static char msf[10];
 	int minutes, seconds, frames;
 
 	time_frame_to_msf(f, &minutes, &seconds, &frames);
-	sprintf(msf, "%02d:%02d:%02d", minutes, seconds, frames);
+	snprintf(msf, sizeof(msf), "%02d:%02d:%02d", minutes, seconds, frames);
 
 	return msf;
 }
