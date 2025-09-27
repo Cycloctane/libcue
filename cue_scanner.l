@@ -103,6 +103,8 @@ REM		{ BEGIN(REM); /* exclusive rules for special exceptions */ }
 
 <REM>DATE			{ BEGIN(NAME); yylval.ival = REM_DATE; return DATE; }
 <REM>COMMENT			{ BEGIN(NAME); yylval.ival = REM_COMMENT; return COMMENT; }
+<REM>DISCNUMBER			{ BEGIN(NAME); yylval.ival = REM_DISCNUMBER; return DISCNUMBER; }
+<REM>TOTALDISCS			{ BEGIN(NAME); yylval.ival = REM_TOTALDISCS; return TOTALDISCS; }
 <REM>GENRE			{ BEGIN(NAME); yylval.ival = PTI_GENRE; return XXX_GENRE; }
 <REM>DISCID			{ BEGIN(NAME); yylval.ival = PTI_DISC_ID; return XXX_DISCID; }
 <REM>COMPOSER			{ BEGIN(NAME); yylval.ival = PTI_COMPOSER; return XXX_COMPOSER; }
