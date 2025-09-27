@@ -26,14 +26,14 @@ void cdtext_delete(Cdtext *cdtext);
 int cdtext_is_empty(Cdtext *cdtext);
 
 /* set CD-TEXT field to value for PTI pti */
-void cdtext_set(int pti, char *value, Cdtext *cdtext);
+void cdtext_set(unsigned int pti, char *value, Cdtext *cdtext);
 
 /*
  * returns appropriate string for PTI pti
  * if istrack is zero, UPC/EAN string will be returned for PTI_UPC_ISRC
  * othwise ISRC string will be returned
  */
-const char *cdtext_get_key(int pti, int istrack);
+const char *cdtext_get_key(unsigned int pti, int istrack);
 
 /*
  * dump all cdtext info

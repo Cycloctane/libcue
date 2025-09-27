@@ -10,7 +10,7 @@
 #include "cdtext.h"
 
 struct Cdtext {
-	int pti;
+	unsigned int pti;
 	int format;
 	char *value;
 };
@@ -72,7 +72,7 @@ int cdtext_is_empty(Cdtext *cdtext)
 }
 
 /* sets cdtext's pti entry to field */
-void cdtext_set(int pti, char *value, Cdtext *cdtext)
+void cdtext_set(unsigned int pti, char *value, Cdtext *cdtext)
 {
 	if (NULL != value)	/* don't pass NULL to strdup */
 		for (; PTI_END != cdtext->pti; cdtext++)
@@ -92,7 +92,7 @@ const char *cdtext_get(enum Pti pti, const Cdtext *cdtext)
 	return NULL;
 }
 
-const char *cdtext_get_key(int pti, int istrack)
+const char *cdtext_get_key(unsigned int pti, int istrack)
 {
 	const char *key = NULL;
 
