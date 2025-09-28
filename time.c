@@ -8,6 +8,7 @@
 #include "time.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 long time_msf_to_frame(int m, int s, int f)
 {
@@ -29,8 +30,13 @@ void time_frame_to_msf(long frame, int *m, int *s, int *f)
 /* print frame in mm:ss:ff format */
 char *time_frame_to_mmssff(long f)
 {
-	static char msf[10];
+	static char msf[9];
 	int minutes, seconds, frames;
+
+	if (f < 0 || f >= 75 * 60 * 100) {
+		strcpy(msf, "00:00:00");
+		return msf;
+	}
 
 	time_frame_to_msf(f, &minutes, &seconds, &frames);
 	snprintf(msf, sizeof(msf), "%02d:%02d:%02d", minutes, seconds, frames);
