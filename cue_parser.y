@@ -122,9 +122,6 @@ Cd *cue_parse_string(const char*);
 /* REM */
 %type <ival> rem_item
 %token <ival> DATE
-%token <ival> COMMENT
-%token <ival> DISCNUMBER
-%token <ival> TOTALDISCS
 %token <ival> XXX_GENRE /* parsed in REM but stored in CD-TEXT */
 %token <ival> XXX_DISCID
 %token <ival> XXX_COMPOSER
@@ -132,6 +129,9 @@ Cd *cue_parse_string(const char*);
 %token <ival> REPLAYGAIN_ALBUM_PEAK
 %token <ival> REPLAYGAIN_TRACK_GAIN
 %token <ival> REPLAYGAIN_TRACK_PEAK
+%token <ival> COMMENT
+%token <ival> DISCNUMBER
+%token <ival> TOTALDISCS
 %%
 
 cuefile
@@ -318,13 +318,13 @@ rem
 
 rem_item
 	: DATE
-	| COMMENT
-	| DISCNUMBER
-	| TOTALDISCS
 	| REPLAYGAIN_ALBUM_GAIN
 	| REPLAYGAIN_ALBUM_PEAK
 	| REPLAYGAIN_TRACK_GAIN
 	| REPLAYGAIN_TRACK_PEAK
+	| COMMENT
+	| DISCNUMBER
+	| TOTALDISCS
 	;
 %%
 
