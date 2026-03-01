@@ -15,7 +15,7 @@ Applied changes (Changelog since v2.3.0):
 `v2.3.0.dev3`:
 
 - Parse `REM COMMENT` lines. (Backported to upstream in https://github.com/lipnitsk/libcue/pull/66 )
-- Parse `REM DISCID` and `REM COMPOSER` lines (stored in cdtext as "DISC_ID" and "COMPOSER").
+- Parse `REM DISCID` and `REM COMPOSER` lines (stored in cdtext as "DISC_ID" and "COMPOSER"). (Backported to upstream in https://github.com/lipnitsk/libcue/pull/71 )
 
 `v2.3.0.dev2`:
 
