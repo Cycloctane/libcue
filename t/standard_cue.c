@@ -6,13 +6,13 @@
 
 int tests_run;
 
-/* Frames per second */
-#define FPS (75)
-#define MSF_TO_F(m,s,f) ((f) + ((m)*60 + (s))*FPS)
+#define MSF_TO_F(m,s,f) ((f) + ((m)*60 + (s))*CUE_FPS)
 
 static char cue[] =   "REM GENRE Alternative\n"
                       "REM DATE 1991\n"
                       "REM DISCID 860B640B\n"
+                      "REM DISCNUMBER 1\n"
+                      "REM TOTALDISCS 2\n"
                       "REM COMMENT \"ExactAudioCopy v0.95b4\"\n"
                       "PERFORMER \"My Bloody Valentine\"\n"
                       "TITLE \"Loveless\"\n"
@@ -53,6 +53,14 @@ static char* cue_test()
    val = rem_get (REM_DATE, rem);
    mu_assert ("error getting CD date", val != NULL);
    mu_assert ("error validating CD date", strcmp (val, "1991") == 0);
+
+   val = rem_get (REM_DISCNUMBER, rem);
+   mu_assert ("error getting CD disc number", val != NULL);
+   mu_assert ("error validating CD disc number", strcmp (val, "1") == 0);
+
+   val = rem_get (REM_TOTALDISCS, rem);
+   mu_assert ("error getting CD total discs", val != NULL);
+   mu_assert ("error validating CD total discs", strcmp (val, "2") == 0);
 
    val = cdtext_get (PTI_DISC_ID, cdtext);
    mu_assert ("error getting CD disc id", val != NULL);

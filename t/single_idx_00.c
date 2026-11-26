@@ -6,9 +6,7 @@
 
 int tests_run;
 
-/* Frames per second */
-#define FPS (75)
-#define MSF_TO_F(m,s,f) ((f) + ((m)*60 + (s))*FPS)
+#define MSF_TO_F(m,s,f) ((f) + ((m)*60 + (s))*CUE_FPS)
 
 static char cue[] =
 "PERFORMER \"Bloc Party\"\n"
@@ -23,7 +21,7 @@ static char cue[] =
       "TITLE \"Helicopter\"\n"
       "PERFORMER \"Bloc Party\"\n"
       "INDEX 00 07:42:69\n"
-      "INDEX 01 07:44:69\n";
+      "INDEX 01 07:44:69";
 
 static char* cue_test()
 {

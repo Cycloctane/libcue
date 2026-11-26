@@ -36,7 +36,8 @@ struct Cd {
 	Cdtext *cdtext;			/* CD-TEXT */
 	Rem* rem;
 	int ntrack;			/* number of tracks in album */
-	Track *track[MAXTRACK];		/* array of tracks */
+	int track_alloc;		/* allocated size of track[] */
+	Track **track;			/* array of tracks */
 };
 
 Cd *cd_init(void)
@@ -52,6 +53,13 @@ Cd *cd_init(void)
 		cd->cdtext = cdtext_init();
 		cd->rem = rem_new();
 		cd->ntrack = 0;
+		cd->track_alloc = 0;
+		cd->track = NULL;
+
+		if (NULL == cd->cdtext || NULL == cd->rem) {
+			cd_delete(cd);
+			cd = NULL;
+		}
 	}
 
 	return cd;
@@ -79,16 +87,17 @@ void track_delete(struct Track* track)
 
 void cd_delete(struct Cd* cd)
 {
-	int i = 0;
-
 	if (cd != NULL)
 	{
+		int i;
+
 		free(cd->catalog);
 
 		free(cd->cdtextfile);
 
 		for (i = 0; i < cd->ntrack; i++)
 			track_delete(cd->track[i]);
+		free(cd->track);
 
 		cdtext_delete(cd_get_cdtext(cd));
 
@@ -127,9 +136,14 @@ Track *track_init(void)
 		track->cdtext = cdtext_init();
 		track->rem = rem_new();
 
-                int i;
-                for (i=0; i<=MAXINDEX; i++)
-                   track->index[i] = -1;
+		int i;
+		for (i = 0; i <= MAXINDEX; i++)
+			track->index[i] = -1;
+
+		if (NULL == track->cdtext || NULL == track->rem) {
+			track_delete(track);
+			track = NULL;
+		}
 	}
 
 	return track;
@@ -138,29 +152,29 @@ Track *track_init(void)
 /*
  * cd structure functions
  */
-void cd_set_catalog(Cd *cd, char *catalog)
+void cd_set_catalog(Cd *cd, const char *catalog)
 {
-	if (cd->catalog)
-		free(cd->catalog);
-
+	free(cd->catalog);
 	cd->catalog = strdup(catalog);
 }
 
 const char *cd_get_catalog(const Cd *cd)
 {
+	if (NULL == cd)
+		return NULL;
 	return cd->catalog;
 }
 
-void cd_set_cdtextfile(Cd *cd, char *cdtextfile)
+void cd_set_cdtextfile(Cd *cd, const char *cdtextfile)
 {
-	if (cd->cdtextfile)
-		free(cd->cdtextfile);
-
+	free(cd->cdtextfile);
 	cd->cdtextfile = strdup(cdtextfile);
 }
 
 const char *cd_get_cdtextfile(const Cd *cd)
 {
+	if (NULL == cd)
+		return NULL;
 	return cd->cdtextfile;
 }
 
@@ -183,21 +197,40 @@ cd_get_rem(const Cd* cd)
 
 Track *cd_add_track(Cd *cd)
 {
-	if (MAXTRACK > cd->ntrack)
-		cd->ntrack++;
-	else
+	Track *track;
+
+	if (MAXTRACK <= cd->ntrack)
 	{
 		fprintf(stderr, "too many tracks\n");
 		return cd->track[cd->ntrack - 1];
 	}
 
-	cd->track[cd->ntrack - 1] = track_init();
+	if (cd->ntrack == cd->track_alloc) {
+		int n = cd->track_alloc ? cd->track_alloc * 2 : 16;
+		Track **t;
 
-	return cd->track[cd->ntrack - 1];
+		if (n > MAXTRACK)
+			n = MAXTRACK;
+		t = realloc(cd->track, n * sizeof(*t));
+		if (NULL == t)
+			return NULL;
+		cd->track = t;
+		cd->track_alloc = n;
+	}
+
+	track = track_init();
+	if (NULL == track)
+		return NULL;
+
+	cd->track[cd->ntrack++] = track;
+
+	return track;
 }
 
 int cd_get_ntrack(const Cd *cd)
 {
+	if (NULL == cd)
+		return 0;
 	return cd->ntrack;
 }
 
@@ -213,16 +246,16 @@ Track *cd_get_track(const Cd *cd, int i)
  * track structure functions
  */
 
-void track_set_filename(Track *track, char *filename)
+void track_set_filename(Track *track, const char *filename)
 {
-	if (track->file.name)
-		free(track->file.name);
-
+	free(track->file.name);
 	track->file.name = strdup(filename);
 }
 
 const char *track_get_filename(const Track *track)
 {
+	if (NULL == track)
+		return NULL;
 	return track->file.name;
 }
 
@@ -233,6 +266,8 @@ void track_set_start(Track *track, long start)
 
 long track_get_start(const Track *track)
 {
+	if (NULL == track)
+		return -1;
 	return track->file.start;
 }
 
@@ -243,6 +278,8 @@ void track_set_length(Track *track, long length)
 
 long track_get_length(const Track *track)
 {
+	if (NULL == track)
+		return -1;
 	return track->file.length;
 }
 
@@ -253,6 +290,8 @@ void track_set_mode(Track *track, int mode)
 
 enum TrackMode track_get_mode(const Track *track)
 {
+	if (NULL == track)
+		return MODE_AUDIO;
 	return track->mode;
 }
 
@@ -268,6 +307,8 @@ void track_clear_flag(Track *track, int flag)
 
 int track_is_set_flag(const Track *track, enum TrackFlag flag)
 {
+	if (NULL == track)
+		return 0;
 	return track->flags & flag;
 }
 
@@ -278,6 +319,8 @@ void track_set_zero_pre(Track *track, long length)
 
 long track_get_zero_pre(const Track *track)
 {
+	if (NULL == track)
+		return -1;
 	return track->zero_pre.length;
 }
 
@@ -288,18 +331,20 @@ void track_set_zero_post(Track *track, long length)
 
 long track_get_zero_post(const Track *track)
 {
+	if (NULL == track)
+		return -1;
 	return track->zero_post.length;
 }
-void track_set_isrc(Track *track, char *isrc)
+void track_set_isrc(Track *track, const char *isrc)
 {
-	if (track->isrc)
-		free(track->isrc);
-
+	free(track->isrc);
 	track->isrc = strdup(isrc);
 }
 
 const char *track_get_isrc(const Track *track)
 {
+	if (NULL == track)
+		return NULL;
 	return track->isrc;
 }
 
@@ -324,15 +369,15 @@ void track_set_index(Track *track, int i, long ind)
 {
 	if (i < 0 || i > MAXINDEX) {
 		fprintf(stderr, "too many indexes\n");
-                return;
-        }
+		return;
+	}
 
 	track->index[i] = ind;
 }
 
 long track_get_index(const Track *track, int i)
 {
-	if ((0 <= i) && (i <= MAXINDEX))
+	if ((NULL != track) && (0 <= i) && (i <= MAXINDEX))
 		return track->index[i];
 
 	return -1;
@@ -346,17 +391,17 @@ static void cd_track_dump(Track *track)
 	int i;
 
 	printf("zero_pre: %ld\n", track->zero_pre.length);
-	printf("filename: %s\n", track->file.name);
+	printf("filename: %s\n", track->file.name ? track->file.name : "(null)");
 	printf("start: %ld\n", track->file.start);
 	printf("length: %ld\n", track->file.length);
 	printf("zero_post: %ld\n", track->zero_post.length);
 	printf("mode: %d\n", track->mode);
 	printf("flags: 0x%x\n", track->flags);
-	printf("isrc: %s\n", track->isrc);
+	printf("isrc: %s\n", track->isrc ? track->isrc : "(null)");
 
 	for (i = 0; i <= MAXINDEX; ++i)
-                if (track->index[i] != -1)
-                        printf("index %d: %ld\n", i, track->index[i]);
+		if (track->index[i] != -1)
+			printf("index %d: %ld\n", i, track->index[i]);
 
 	if (NULL != track->cdtext) {
 		printf("cdtext:\n");
@@ -375,8 +420,8 @@ void cd_dump(Cd *cd)
 	int i;
 
 	printf("Disc Info\n");
-	printf("catalog: %s\n", cd->catalog);
-	printf("cdtextfile: %s\n", cd->cdtextfile);
+	printf("catalog: %s\n", cd->catalog ? cd->catalog : "(null)");
+	printf("cdtextfile: %s\n", cd->cdtextfile ? cd->cdtextfile : "(null)");
 	if (NULL != cd->cdtext) {
 		printf("cdtext:\n");
 		cdtext_dump(cd->cdtext, 0);

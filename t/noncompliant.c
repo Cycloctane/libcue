@@ -6,9 +6,7 @@
 
 int tests_run;
 
-/* Frames per second */
-#define FPS (75)
-#define MSF_TO_F(m,s,f) ((f) + ((m)*60 + (s))*FPS)
+#define MSF_TO_F(m,s,f) ((f) + ((m)*60 + (s))*CUE_FPS)
 
 static char cue[] = 
                "FILE \"The Specials - Singles - 01 - Gangsters.flac\" FLAC\n"
@@ -21,7 +19,7 @@ static char cue[] =
                      "PERFORMER \"The Specials\"\n"
                      "INDEX 00 02:47:74\n"
                "FILE \"The Specials - Singles - 02 - Rudi, A Message To You.flac\" FLAC\n"
-                     "INDEX 01 00:00:00\n";
+                     "INDEX 01 00:00:00\n\n\n\n\n\n";
 
 static char* cue_test()
 {
